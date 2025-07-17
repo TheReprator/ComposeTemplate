@@ -1,4 +1,4 @@
-package dev.rep.template.features.newsList.ui
+package dev.rep.template.features.newsList.presentation.ui
 
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.SavedStateHandle

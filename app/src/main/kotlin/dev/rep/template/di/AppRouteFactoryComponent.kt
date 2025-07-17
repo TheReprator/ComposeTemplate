@@ -1,7 +1,7 @@
 package dev.rep.template.di
 
 import dev.rep.template.features.newsDetail.NewsListDetailRouteFactory
-import dev.rep.template.features.newsList.ui.NewsListRouteFactory
+import dev.rep.template.features.newsList.presentation.ui.NewsListRouteFactory
 import dev.rep.template.root.AppRouteFactory
 import me.tatarka.inject.annotations.IntoSet
 import me.tatarka.inject.annotations.Provides

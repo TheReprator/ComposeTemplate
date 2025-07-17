@@ -1,8 +1,11 @@
-package dev.rep.template.features.newsList.ui
+package dev.rep.template.features.newsList.presentation.ui
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,6 +20,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
@@ -26,8 +30,8 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.navigation.NavController
 import dev.rep.template.features.newsDetail.NewsDetailNavigation
 import dev.rep.template.features.newsList.domain.NewsModel
-import dev.rep.template.features.newsList.presentation.NewsListEffect
 import dev.rep.template.features.newsList.presentation.NewsListAction
+import dev.rep.template.features.newsList.presentation.NewsListEffect
 import dev.rep.template.features.newsList.presentation.NewsListState
 import dev.rep.template.features.newsList.presentation.NewsListViewModel
 import me.tatarka.inject.annotations.Inject
@@ -68,7 +72,7 @@ fun NewsListScreen(
     }
 
     NewsListScreen(state, {
-        newsListViewModel.onAction(NewsListAction.NavigateToDetail(it))
+        newsListViewModel.onAction(NewsListAction.NewsClicked(it))
     }, {
         newsListViewModel.onAction(NewsListAction.RetryFetchNews)
     }, modifier)
@@ -81,7 +85,11 @@ fun NewsListScreen(
     onRetry: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier.padding(30.dp)) {
+    Box(
+        Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(), contentAlignment = Alignment.Center
+    ) {
 
         if (state.newsLoading) {
             return NewsListLoader()
@@ -99,7 +107,7 @@ fun NewsListScreen(
 fun NewsListLoader(
     modifier: Modifier = Modifier
 ) {
-    CircularProgressIndicator(Modifier.fillMaxSize())
+    CircularProgressIndicator()
 }
 
 
@@ -108,7 +116,7 @@ fun NewsListRetry(
     onRetry: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column {
+    Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
         Button(onClick = {
             onRetry()
         }) {
@@ -128,8 +136,7 @@ fun NewsListDisplay(
     val rememberClick by rememberUpdatedState(newsItemClick)
     LazyColumn(
         Modifier
-            .fillMaxSize()
-            .padding(20.dp),
+            .fillMaxSize(),
         state = rememberLazyListState(),
     ) {
         newsList.forEach {

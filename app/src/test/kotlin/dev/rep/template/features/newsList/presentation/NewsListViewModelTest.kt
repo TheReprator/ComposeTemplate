@@ -6,7 +6,8 @@ import dev.mokkery.answering.returns
 import dev.mokkery.everySuspend
 import dev.mokkery.mock
 import dev.rep.template.features.newsList.domain.usecase.FetchNewsUseCase
-import dev.rep.template.features.newsList.presentation.inputProvider.MockFetchNewsSuccessUseCase.Companion.newsList
+import dev.rep.template.features.newsList.presentation.inputProvider.MockFetchNewsSuccessUseCase.Companion.errorMessage
+import dev.rep.template.features.newsList.presentation.inputProvider.MockFetchNewsSuccessUseCase.Companion.successNewsList
 import dev.rep.template.features.newsList.util.MainDispatcherRule
 import dev.rep.template.util.AppError
 import dev.rep.template.util.AppSuccess
@@ -43,12 +44,13 @@ class NewsListViewModelTest {
         newsListViewModel = NewsListViewModel(
             savedStateHandle = savedStateHandle,
             dispatchers = dispatchers,
-            newsUseCase = fetchNewsUseCase
+            middleWareList = setOf(NewsListMiddleware(fetchNewsUseCase, dispatchers)),
+            reducer = NewsListScreenReducer()
         )
     }
 
     @Test
-    fun `Initial setup` () = runTest {
+    fun `Initial setup`() = runTest {
         newsListViewModel.sideEffect.test {
             expectNoEvents()
         }
@@ -60,30 +62,38 @@ class NewsListViewModelTest {
     }
 
     @Test
-    fun `fetch news successfully from server on Action FetchNews` () = runTest {
+    fun `fetch news successfully from server on Action FetchNews`() = runTest {
         everySuspend {
             fetchNewsUseCase()
-        } returns AppSuccess(newsList)
+        } returns AppSuccess(successNewsList)
 
         newsListViewModel.uiState.test {
             expectMostRecentItem() == NewsListState.initial()
 
             newsListViewModel.onAction(NewsListAction.FetchNews)
 
-            val nextItem = awaitItem()
-            assert(nextItem.newsList.isNotEmpty())
-            assert(nextItem.newsList.size == newsList.size)
-            assert(nextItem.errorMessage.isEmpty())
-            assert(!nextItem.isError)
-            assert(!nextItem.newsLoading)
+            val nextItemLoading = awaitItem()
+            with(nextItemLoading){
+                assert(newsList.isEmpty())
+                assert(errorMessage.isEmpty())
+                assert(!isError)
+                assert(newsLoading)
+            }
 
+            val nextItem = awaitItem()
+            with(nextItem) {
+                assert(newsList.isNotEmpty())
+                assert(newsList.size == newsList.size)
+                assert(errorMessage.isEmpty())
+                assert(!isError)
+                assert(!newsLoading)
+            }
             expectNoEvents()
         }
     }
 
     @Test
-    fun `fetch news failed from server on Action FetchNews` () = runTest {
-        val errorMessage = "Failed to fetch news"
+    fun `fetch news failed from server on Action FetchNews`() = runTest {
 
         everySuspend {
             fetchNewsUseCase()
@@ -93,6 +103,14 @@ class NewsListViewModelTest {
             expectMostRecentItem() == NewsListState.initial()
 
             newsListViewModel.onAction(NewsListAction.FetchNews)
+
+            val nextItemLoading = awaitItem()
+            with(nextItemLoading){
+                assert(this.newsList.isEmpty())
+                assert(this.errorMessage.isEmpty())
+                assert(!isError)
+                assert(newsLoading)
+            }
 
             val nextItem = awaitItem()
             assert(nextItem.newsList.isEmpty())
@@ -106,17 +124,65 @@ class NewsListViewModelTest {
     }
 
     @Test
-    fun `Navigate to detail on Action NavigateToDetail via side effect` () = runTest {
-        val clickedItem = newsList.first()
+    fun `retry to fetch news failed from server on Action RetryFetchNews`() = runTest {
+        everySuspend {
+            fetchNewsUseCase()
+        } returns AppError(message = errorMessage)
+
+        newsListViewModel.uiState.test {
+            expectMostRecentItem() == NewsListState.initial()
+
+            newsListViewModel.onAction(NewsListAction.FetchNews)
+            with(awaitItem()){
+                assert(this.newsList.isEmpty())
+                assert(this.errorMessage.isEmpty())
+                assert(!isError)
+                assert(newsLoading)
+            }
+
+            with(awaitItem()) {
+                assert(newsList.isEmpty())
+                assert(errorMessage.isNotEmpty())
+                assert(errorMessage == errorMessage)
+                assert(isError)
+                assert(!newsLoading)
+            }
+
+            everySuspend {
+                fetchNewsUseCase()
+            } returns AppSuccess(successNewsList)
+
+            newsListViewModel.onAction(NewsListAction.RetryFetchNews)
+            with(awaitItem()) {
+                assert(this.newsList.isEmpty())
+                assert(this.errorMessage.isEmpty())
+                assert(!isError)
+                assert(newsLoading)
+            }
+
+            with(awaitItem()) {
+                assert(newsList.isNotEmpty())
+                assert(newsList.size == newsList.size)
+                assert(errorMessage.isEmpty())
+                assert(!isError)
+                assert(!newsLoading)
+            }
+            expectNoEvents()
+        }
+    }
+
+    @Test
+    fun `Navigate to detail on Action NavigateToDetail via side effect`() = runTest {
+        val clickedItem = successNewsList.first()
 
         everySuspend {
             fetchNewsUseCase()
-        } returns AppSuccess(newsList)
+        } returns AppSuccess(successNewsList)
 
         newsListViewModel.onAction(NewsListAction.FetchNews)
         advanceUntilIdle()
 
-        newsListViewModel.onAction(NewsListAction.NavigateToDetail(clickedItem))
+        newsListViewModel.onAction(NewsListAction.NewsClicked(clickedItem))
 
         newsListViewModel.sideEffect.test {
             val nextItem = awaitItem()

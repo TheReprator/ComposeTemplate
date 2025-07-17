@@ -1,41 +1,49 @@
 package dev.rep.template.features.newsList.presentation
 
-import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.Stable
-import dev.rep.template.features.newsList.domain.NewsModel
-import dev.rep.template.util.base.mvi.SideEffect
-import dev.rep.template.util.base.mvi.UiAction
-import dev.rep.template.util.base.mvi.UiState
+import dev.rep.template.util.base.mvi.Reducer
+import me.tatarka.inject.annotations.Inject
 
-@Stable
-sealed interface NewsListAction: UiAction {
-    object FetchNews : NewsListAction
-    object RetryFetchNews : NewsListAction
+@Inject
+class NewsListScreenReducer :
+    Reducer<NewsListState, NewsListAction, NewsListEffect> {
 
-    data class NavigateToDetail(val newsModel: NewsModel) : NewsListAction
-}
+    override fun reduce(
+        previousState: NewsListState,
+        action: NewsListAction
+    ): Pair<NewsListState, NewsListEffect?> {
+        return when (action) {
+            is NewsListAction.RetryFetchNews -> {
+                previousState.copy(
+                    newsLoading = true,
+                    errorMessage = "",
+                    isError = false
+                ) to null
+            }
 
-@Stable
-sealed interface NewsListEffect : SideEffect {
-    data class NavigateToDetail(val newsModel: NewsModel) : NewsListEffect
-    data class ShowError(val message: String) : NewsListEffect
-}
+            is NewsListAction.FetchNews -> {
+                previousState.copy(
+                    newsLoading = true
+                ) to null
+            }
 
-@Immutable
-data class NewsListState(
-    val newsLoading: Boolean,
-    val isError: Boolean,
-    val errorMessage: String,
-    val newsList: List<NewsModel>
-): UiState {
-    companion object {
-        fun initial(): NewsListState {
-            return NewsListState(
-                newsLoading = true,
-                isError = false,
-                errorMessage = "",
-                newsList = emptyList()
-            )
+            is NewsListAction.UpdateNews -> {
+                previousState.copy(
+                    newsLoading = false,
+                    newsList = action.newsList
+                ) to null
+            }
+
+            is NewsListAction.NewsError -> {
+                previousState.copy(
+                    newsLoading = false,
+                    isError = true,
+                    errorMessage = action.message
+                ) to null
+            }
+
+            is NewsListAction.NewsClicked -> {
+                previousState to NewsListEffect.NavigateToDetail(action.news)
+            }
         }
     }
 }

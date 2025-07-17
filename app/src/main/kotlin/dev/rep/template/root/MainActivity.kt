@@ -15,7 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import dev.rep.template.di.AndroidActivityComponent
 import dev.rep.template.di.AndroidApplicationComponent
 import dev.rep.template.di.create
-import dev.rep.template.features.newsList.ui.NewsListNavigation
+import dev.rep.template.features.newsList.presentation.ui.NewsListNavigation
 import dev.rep.template.root.theme.AppTheme
 
 class MainActivity : ComponentActivity() {

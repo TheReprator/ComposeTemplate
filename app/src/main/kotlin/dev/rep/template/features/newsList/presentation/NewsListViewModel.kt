@@ -20,20 +20,20 @@ class NewsListViewModel(
     @Assisted val savedStateHandle: SavedStateHandle,
     private val newsUseCase: FetchNewsUseCase,
     private val dispatchers: AppCoroutineDispatchers,
-) : ViewModel(), MVI<NewsListState, NewsListEvent, NewsListEffect> by mvi(NewsListState.initial()) {
+) : ViewModel(), MVI<NewsListState, NewsListAction, NewsListEffect> by mvi(NewsListState.initial()) {
 
-    override fun onAction(uiAction: NewsListEvent) {
+    override fun onAction(uiAction: NewsListAction) {
         when (uiAction) {
-            is NewsListEvent.FetchNews -> {
+            is NewsListAction.FetchNews -> {
                 fetchNews()
             }
 
-            is NewsListEvent.RetryFetchNews -> {
+            is NewsListAction.RetryFetchNews -> {
                 retryFetchNews()
                 fetchNews()
             }
 
-            is NewsListEvent.NavigateToDetail -> {
+            is NewsListAction.NavigateToDetail -> {
                 viewModelScope.emitSideEffect(NewsListEffect.NavigateToDetail(uiAction.newsModel))
             }
         }

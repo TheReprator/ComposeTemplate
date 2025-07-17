@@ -4,16 +4,22 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
-interface MVI<UiState, UiAction, SideEffect> {
-    val uiState: StateFlow<UiState>
+interface UiState
 
-    val sideEffect: Flow<SideEffect>
+interface UiAction
 
-    fun onAction(uiAction: UiAction)
+interface SideEffect
 
-    fun updateUiState(block: UiState.() -> UiState)
+interface MVI<S : UiState, A: UiAction, E: SideEffect> {
+    val uiState: StateFlow<S>
 
-    fun updateUiState(newUiState: UiState)
+    val sideEffect: Flow<E>
 
-    fun CoroutineScope.emitSideEffect(effect: SideEffect)
+    fun onAction(uiAction: A)
+
+    fun updateUiState(block: S.() -> S)
+
+    fun updateUiState(newUiState: S)
+
+    fun CoroutineScope.emitSideEffect(effect: E)
 }

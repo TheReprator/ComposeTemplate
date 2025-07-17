@@ -49,12 +49,13 @@ class NewsListViewModelTest {
 
     @Test
     fun `Initial setup` () = runTest {
+        newsListViewModel.sideEffect.test {
+            expectNoEvents()
+        }
+
         newsListViewModel.uiState.test {
-            val item = awaitItem()
-            assert(item.newsList.isEmpty())
-            assert(item.errorMessage.isEmpty())
-            assert(!item.isError)
-            assert(item.newsLoading)
+            expectMostRecentItem() == NewsListState.initial()
+            expectNoEvents()
         }
     }
 
@@ -65,13 +66,9 @@ class NewsListViewModelTest {
         } returns AppSuccess(newsList)
 
         newsListViewModel.uiState.test {
-            val item = awaitItem()
-            assert(item.newsList.isEmpty())
-            assert(item.errorMessage.isEmpty())
-            assert(!item.isError)
-            assert(item.newsLoading)
+            expectMostRecentItem() == NewsListState.initial()
 
-            newsListViewModel.onAction(NewsListEvent.FetchNews)
+            newsListViewModel.onAction(NewsListAction.FetchNews)
 
             val nextItem = awaitItem()
             assert(nextItem.newsList.isNotEmpty())
@@ -79,6 +76,8 @@ class NewsListViewModelTest {
             assert(nextItem.errorMessage.isEmpty())
             assert(!nextItem.isError)
             assert(!nextItem.newsLoading)
+
+            expectNoEvents()
         }
     }
 
@@ -91,13 +90,9 @@ class NewsListViewModelTest {
         } returns AppError(message = errorMessage)
 
         newsListViewModel.uiState.test {
-            val item = awaitItem()
-            assert(item.newsList.isEmpty())
-            assert(item.errorMessage.isEmpty())
-            assert(!item.isError)
-            assert(item.newsLoading)
+            expectMostRecentItem() == NewsListState.initial()
 
-            newsListViewModel.onAction(NewsListEvent.FetchNews)
+            newsListViewModel.onAction(NewsListAction.FetchNews)
 
             val nextItem = awaitItem()
             assert(nextItem.newsList.isEmpty())
@@ -105,6 +100,8 @@ class NewsListViewModelTest {
             assert(nextItem.errorMessage == errorMessage)
             assert(nextItem.isError)
             assert(!nextItem.newsLoading)
+
+            expectNoEvents()
         }
     }
 
@@ -116,15 +113,17 @@ class NewsListViewModelTest {
             fetchNewsUseCase()
         } returns AppSuccess(newsList)
 
-        newsListViewModel.onAction(NewsListEvent.FetchNews)
+        newsListViewModel.onAction(NewsListAction.FetchNews)
         advanceUntilIdle()
 
-        newsListViewModel.onAction(NewsListEvent.NavigateToDetail(clickedItem))
+        newsListViewModel.onAction(NewsListAction.NavigateToDetail(clickedItem))
 
         newsListViewModel.sideEffect.test {
             val nextItem = awaitItem()
             assert(nextItem is NewsListEffect.NavigateToDetail)
             assert((nextItem as NewsListEffect.NavigateToDetail).newsModel == clickedItem)
+
+            expectNoEvents()
         }
     }
 }

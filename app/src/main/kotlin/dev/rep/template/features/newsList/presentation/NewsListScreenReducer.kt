@@ -3,18 +3,20 @@ package dev.rep.template.features.newsList.presentation
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import dev.rep.template.features.newsList.domain.NewsModel
-
+import dev.rep.template.util.base.mvi.SideEffect
+import dev.rep.template.util.base.mvi.UiAction
+import dev.rep.template.util.base.mvi.UiState
 
 @Stable
-sealed interface NewsListEvent {
-    object FetchNews : NewsListEvent
-    object RetryFetchNews : NewsListEvent
+sealed interface NewsListAction: UiAction {
+    object FetchNews : NewsListAction
+    object RetryFetchNews : NewsListAction
 
-    data class NavigateToDetail(val newsModel: NewsModel) : NewsListEvent
+    data class NavigateToDetail(val newsModel: NewsModel) : NewsListAction
 }
 
 @Stable
-sealed interface NewsListEffect {
+sealed interface NewsListEffect : SideEffect {
     data class NavigateToDetail(val newsModel: NewsModel) : NewsListEffect
     data class ShowError(val message: String) : NewsListEffect
 }
@@ -25,7 +27,7 @@ data class NewsListState(
     val isError: Boolean,
     val errorMessage: String,
     val newsList: List<NewsModel>
-) {
+): UiState {
     companion object {
         fun initial(): NewsListState {
             return NewsListState(
@@ -37,45 +39,3 @@ data class NewsListState(
         }
     }
 }
-
-/*
-class NewsListScreenReducer :
-    Reducer<NewsListScreenReducer.NewsListState, NewsListScreenReducer.NewsListEvent,
-            NewsListScreenReducer.NewsListEffect> {
-
-    override fun reduce(
-        previousState: NewsListState,
-        event: NewsListEvent
-    ): Pair<NewsListState, NewsListEffect?> {
-        return when (event) {
-            is NewsListEvent.FetchNews -> {
-                previousState.copy(
-                    newsLoading = true
-                ) to null
-            }
-
-            is NewsListEvent.FetchNewsError -> {
-                previousState.copy(
-                    newsLoading = false,
-                    isError = true,
-                    errorMessage = event.errorMessage
-                ) to null
-            }
-
-            is NewsListEvent.FetchNewsList -> {
-                previousState.copy(
-                    newsLoading = false,
-                    newsList = event.newsList
-                ) to null
-            }
-
-            is NewsListEvent.RetryFetchNews -> {
-                previousState.copy(
-                    newsLoading = true,
-                    errorMessage = "",
-                    isError = false
-                ) to null
-            }
-        }
-    }
-}*/

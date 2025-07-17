@@ -27,7 +27,7 @@ import androidx.navigation.NavController
 import dev.rep.template.features.newsDetail.NewsDetailNavigation
 import dev.rep.template.features.newsList.domain.NewsModel
 import dev.rep.template.features.newsList.presentation.NewsListEffect
-import dev.rep.template.features.newsList.presentation.NewsListEvent
+import dev.rep.template.features.newsList.presentation.NewsListAction
 import dev.rep.template.features.newsList.presentation.NewsListState
 import dev.rep.template.features.newsList.presentation.NewsListViewModel
 import me.tatarka.inject.annotations.Inject
@@ -64,13 +64,13 @@ fun NewsListScreen(
     }
 
     LaunchedEffect(Unit) {
-        newsListViewModel.onAction(NewsListEvent.FetchNews)
+        newsListViewModel.onAction(NewsListAction.FetchNews)
     }
 
     NewsListScreen(state, {
-        newsListViewModel.onAction(NewsListEvent.NavigateToDetail(it))
+        newsListViewModel.onAction(NewsListAction.NavigateToDetail(it))
     }, {
-        newsListViewModel.onAction(NewsListEvent.RetryFetchNews)
+        newsListViewModel.onAction(NewsListAction.RetryFetchNews)
     }, modifier)
 }
 
@@ -149,12 +149,3 @@ fun NewsListDisplay(
         }
     }
 }
-
-/*
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    AppTheme {
-        Greeting("Android")
-    }
-}*/

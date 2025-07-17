@@ -7,15 +7,15 @@ import dev.rep.template.util.AppSuccess
 class MockFetchNewsSuccessUseCase {
 
     companion object {
-        val successNewsList = listOf(
-        NewsModel(
-        "https://example.com/image1.jpg", "1", "Author 1",
-        "Title 1", "Description 1", "https://example.com/detail1", false),
-
-        NewsModel(
-        "https://example.com/image1.jpg", "1", "Author 1",
-        "Title 1", "Description 1", "https://example.com/detail1", false
-        ))
+        val successNewsList = buildList<NewsModel> {
+            repeat(10) {
+                add(
+                    NewsModel(
+                        "https://example.com/image$it.jpg", "$it", "Author $it",
+                        "Title $it", "Description $it", "https://example.com/detail$it")
+                )
+            }
+        }
 
         val errorMessage = "Failed to fetch news"
     }

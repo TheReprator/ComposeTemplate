@@ -5,6 +5,7 @@ import app.cash.turbine.test
 import dev.mokkery.answering.returns
 import dev.mokkery.everySuspend
 import dev.mokkery.mock
+import dev.rep.template.features.newsList.domain.NewsModel
 import dev.rep.template.features.newsList.domain.usecase.FetchNewsUseCase
 import dev.rep.template.features.newsList.presentation.inputProvider.MockFetchNewsSuccessUseCase.Companion.errorMessage
 import dev.rep.template.features.newsList.presentation.inputProvider.MockFetchNewsSuccessUseCase.Companion.successNewsList
@@ -18,6 +19,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import kotlin.collections.List
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class NewsListViewModelTest {
@@ -65,7 +67,7 @@ class NewsListViewModelTest {
     fun `fetch news successfully from server on Action FetchNews`() = runTest {
         everySuspend {
             fetchNewsUseCase()
-        } returns AppSuccess(successNewsList)
+        } returns AppSuccess<List<NewsModel>>(successNewsList)
 
         newsListViewModel.uiState.test {
             expectMostRecentItem() == NewsListState.initial()
@@ -150,7 +152,7 @@ class NewsListViewModelTest {
 
             everySuspend {
                 fetchNewsUseCase()
-            } returns AppSuccess(successNewsList)
+            } returns AppSuccess<List<NewsModel>>(successNewsList)
 
             newsListViewModel.onAction(NewsListAction.RetryFetchNews)
             with(awaitItem()) {
@@ -173,11 +175,11 @@ class NewsListViewModelTest {
 
     @Test
     fun `Navigate to detail on Action NavigateToDetail via side effect`() = runTest {
-        val clickedItem = successNewsList.first()
+        val clickedItem = successNewsList.first<NewsModel>()
 
         everySuspend {
             fetchNewsUseCase()
-        } returns AppSuccess(successNewsList)
+        } returns AppSuccess<List<NewsModel>>(successNewsList)
 
         newsListViewModel.onAction(NewsListAction.FetchNews)
         advanceUntilIdle()

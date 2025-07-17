@@ -7,10 +7,10 @@ import kotlinx.coroutines.flow.Flow
 import me.tatarka.inject.annotations.Inject
 
 @Inject
-class FetchNewsDataRepositoryImpl constructor(private val dataRepository: FetchNewsDataRepository): FetchNewsRepository {
+class FetchNewsDataRepositoryImpl (private val dataRepository: FetchNewsDataRepository): FetchNewsRepository {
 
-    override suspend fun fetchNews(): AppResult<List<NewsModel>> {
-       return dataRepository.fetchNews()
+    override suspend fun fetchNews(query: String): AppResult<List<NewsModel>> {
+       return dataRepository.fetchNews(query)
     }
 
     override suspend fun searchNews(query: String): Flow<AppResult<List<NewsModel>>> {

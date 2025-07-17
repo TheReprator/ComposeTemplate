@@ -1,41 +1,56 @@
 package dev.rep.template.util.base.mvi
 
+import dev.rep.template.util.wrapper.AppCoroutineDispatchers
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import kotlin.getValue
 
-class MVIDelegate<UiState, UiAction, SideEffect> internal constructor(
-    initialUiState: UiState,
-) : MVI<UiState, UiAction, SideEffect> {
+class MVIDelegate<S : UiState, A : UiAction, E : SideEffect> internal constructor(
+    private val dispatcher: AppCoroutineDispatchers,
+    private val reducer: Reducer<S, A, E>,
+    private val middlewares: Set<Middleware<S, A, E>> = emptySet(),
+    initialUiState: S,
+) : MVI<S, A, E> {
 
     private val _uiState = MutableStateFlow(initialUiState)
-    override val uiState: StateFlow<UiState> = _uiState.asStateFlow()
+    override val uiState: StateFlow<S> = _uiState.asStateFlow()
 
-    private val _sideEffect by lazy { Channel<SideEffect>() }
-    override val sideEffect: Flow<SideEffect> by lazy { _sideEffect.receiveAsFlow() }
+    private val _sideEffect = Channel<E>(Channel.BUFFERED)
+    override val sideEffect: Flow<E> = _sideEffect.receiveAsFlow()
 
-    override fun onAction(uiAction: UiAction) {}
-
-    override fun updateUiState(newUiState: UiState) {
-        _uiState.update { newUiState }
+    init {
+        middlewares.forEach { it.attach(::onAction) }
     }
 
-    override fun updateUiState(block: UiState.() -> UiState) {
+    override val currentState: S get() = _uiState.value
+
+    override fun onAction(uiAction: A) {
+        val (newState, effect) = reducer.reduce(_uiState.value, uiAction)
+        _uiState.value = newState
+        effect?.let { _sideEffect.trySend(it) }
+
+        middlewares.forEach { it.onAction(uiAction, newState) }
+    }
+
+    override fun updateUiState(block: S.() -> S) {
         _uiState.update(block)
     }
 
-    override fun CoroutineScope.emitSideEffect(effect: SideEffect) {
-        this.launch { _sideEffect.send(effect) }
+    override fun updateUiState(newUiState: S) {
+        _uiState.value = newUiState
+    }
+
+    override fun CoroutineScope.emitSideEffect(effect: E) {
+        launch(dispatcher.main) {
+            _sideEffect.send(effect)
+        }
     }
 }
 
-fun <UiState, UiAction, SideEffect> mvi(
-    initialUiState: UiState,
-): MVI<UiState, UiAction, SideEffect> = MVIDelegate(initialUiState)
+fun <S : UiState, A : UiAction, E : SideEffect> mvi(
+    dispatcher: AppCoroutineDispatchers,
+    reducer: Reducer<S, A, E>,
+    middleware: Set<Middleware<S, A, E>> = emptySet(),
+    initialUiState: S,
+): MVI<S, A, E> = MVIDelegate(dispatcher, reducer, middleware, initialUiState)

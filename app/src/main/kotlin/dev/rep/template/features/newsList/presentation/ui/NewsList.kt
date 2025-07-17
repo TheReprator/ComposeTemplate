@@ -1,8 +1,11 @@
-package dev.rep.template.features.newsList.ui
+package dev.rep.template.features.newsList.presentation.ui
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,20 +20,26 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.navigation.NavController
+import dev.rep.template.R
 import dev.rep.template.features.newsDetail.NewsDetailNavigation
 import dev.rep.template.features.newsList.domain.NewsModel
+import dev.rep.template.features.newsList.presentation.NewsListAction
 import dev.rep.template.features.newsList.presentation.NewsListEffect
-import dev.rep.template.features.newsList.presentation.NewsListEvent
 import dev.rep.template.features.newsList.presentation.NewsListState
 import dev.rep.template.features.newsList.presentation.NewsListViewModel
 import me.tatarka.inject.annotations.Inject
+
+typealias OnAction = (NewsListAction) -> Unit
 
 @Inject
 @Composable
@@ -64,34 +73,35 @@ fun NewsListScreen(
     }
 
     LaunchedEffect(Unit) {
-        newsListViewModel.onAction(NewsListEvent.FetchNews)
+        newsListViewModel.onAction(NewsListAction.FetchNews)
     }
 
-    NewsListScreen(state, {
-        newsListViewModel.onAction(NewsListEvent.NavigateToDetail(it))
-    }, {
-        newsListViewModel.onAction(NewsListEvent.RetryFetchNews)
-    }, modifier)
+    NewsListScreen(state, { newsListViewModel.onAction(it) }, modifier)
 }
 
 @Composable
 fun NewsListScreen(
     state: NewsListState,
-    newsItemClick: (NewsModel) -> Unit,
-    onRetry: () -> Unit,
+    onAction: OnAction,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier.padding(30.dp)) {
+    Box(
+        Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(), contentAlignment = Alignment.Center
+    ) {
 
         if (state.newsLoading) {
             return NewsListLoader()
         }
 
         if (state.isError) {
-            return NewsListRetry(onRetry)
+            return NewsListRetry({ onAction(NewsListAction.RetryFetchNews) })
         }
 
-        NewsListDisplay(newsItemClick, state.newsList)
+        NewsListDisplay({
+            onAction(NewsListAction.NewsClicked(it))
+        }, state.newsList)
     }
 }
 
@@ -99,7 +109,7 @@ fun NewsListScreen(
 fun NewsListLoader(
     modifier: Modifier = Modifier
 ) {
-    CircularProgressIndicator(Modifier.fillMaxSize())
+    CircularProgressIndicator(Modifier.testTag(stringResource(R.string.testTag_loader)))
 }
 
 
@@ -108,13 +118,14 @@ fun NewsListRetry(
     onRetry: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column {
+    Column(
+        verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
         Button(onClick = {
             onRetry()
         }) {
-            Text(text = "Retry", Modifier.padding(10.dp))
+            Text(text = stringResource(R.string.app_retry), Modifier.padding(10.dp))
         }
-        Text(text = "An Error occurred")
+        Text(text = stringResource(R.string.app_error_generic))
     }
 }
 
@@ -128,8 +139,7 @@ fun NewsListDisplay(
     val rememberClick by rememberUpdatedState(newsItemClick)
     LazyColumn(
         Modifier
-            .fillMaxSize()
-            .padding(20.dp),
+            .fillMaxSize(),
         state = rememberLazyListState(),
     ) {
         newsList.forEach {
@@ -149,12 +159,3 @@ fun NewsListDisplay(
         }
     }
 }
-
-/*
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    AppTheme {
-        Greeting("Android")
-    }
-}*/

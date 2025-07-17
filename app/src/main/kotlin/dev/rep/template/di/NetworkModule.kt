@@ -25,11 +25,9 @@ private const val MILLISECONDS = 1000L
 interface NetworkModule {
 
     @Provides
-    @ApplicationScope
     fun provideHttpClientEngine(): HttpClientEngine = Android.create()
 
     @Provides
-    @ApplicationScope
     fun provideHttpClient(engine: HttpClientEngine): HttpClient {
 
         return HttpClient(engine) {

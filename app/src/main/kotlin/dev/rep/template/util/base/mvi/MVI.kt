@@ -4,16 +4,35 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
-interface MVI<UiState, UiAction, SideEffect> {
-    val uiState: StateFlow<UiState>
+interface UiState
+interface UiAction
+interface SideEffect
 
-    val sideEffect: Flow<SideEffect>
 
-    fun onAction(uiAction: UiAction)
 
-    fun updateUiState(block: UiState.() -> UiState)
+interface MVI<S : UiState, A : UiAction, E : SideEffect> {
+    val uiState: StateFlow<S>
+    val sideEffect: Flow<E>
 
-    fun updateUiState(newUiState: UiState)
+    val currentState: S
 
-    fun CoroutineScope.emitSideEffect(effect: SideEffect)
+    fun onAction(uiAction: A)
+    fun updateUiState(block: S.() -> S)
+    fun updateUiState(newUiState: S)
+    fun CoroutineScope.emitSideEffect(effect: E)
+}
+
+
+
+interface Reducer<S : UiState, A : UiAction, E : SideEffect> {
+    fun reduce(previousState: S, action: A): Pair<S, E?>
+}
+
+
+
+typealias ActionDispatcher<A> = (A) -> Unit
+
+interface Middleware<S : UiState, A : UiAction, E : SideEffect> {
+    fun onAction(action: A, state: S)
+    fun attach(dispatcher: ActionDispatcher<A>)
 }

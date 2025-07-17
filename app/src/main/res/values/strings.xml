@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ComposeTemplate</string>
+    <string name="app_retry">Retry</string>
+    <string name="app_error_generic">An Error occurred</string>
 </resources>

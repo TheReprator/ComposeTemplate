@@ -8,7 +8,7 @@ import dev.rep.template.util.wrapper.ApplicationInfo
 import me.tatarka.inject.annotations.Inject
 
 @Inject
-class KermitInitializer constructor(
+class KermitInitializer(
   private val applicationInfo: ApplicationInfo,
 ) : AppInitializer {
   override fun initialize() {

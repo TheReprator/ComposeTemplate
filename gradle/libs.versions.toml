@@ -1,15 +1,17 @@
 [versions]
-agp = "8.11.0"
+agp = "8.11.1"
 kotlin = "2.2.0"
 coreKtx = "1.16.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
-lifecycleRuntimeKtx = "2.9.1"
+lifecycleRuntimeKtx = "2.9.2"
+androidxLifecycle = "2.9.2"
+androidxNavigation = "2.9.2"
 activityCompose = "1.10.1"
-composeBom = "2025.06.01"
+composeBom = "2025.07.00"
 kotlinxCoroutines = "1.10.2"
-ktor = "3.2.1"
+ktor = "3.2.2"
 coil = "3.2.0"
 kotlininject = "0.8.0"
 turbine = "1.2.1"
@@ -18,8 +20,6 @@ room = "2.7.2"
 sqlite = "2.5.2"
 spotless = "7.1.0"
 compose-multiplatform = "1.8.2"
-androidxLifecycle = "2.9.1"
-androidxNavigation = "2.9.1"
 browser = "1.8.0"
 
 [libraries]
@@ -40,6 +40,7 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidxLifecycle" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidxLifecycle" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "androidxNavigation" }
+androidx-navigation-test = { module = "androidx.navigation:navigation-testing", version.ref = "androidxNavigation" }
 
 androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "browser" }
 androidx-work-runtime = "androidx.work:work-runtime-ktx:2.10.2"

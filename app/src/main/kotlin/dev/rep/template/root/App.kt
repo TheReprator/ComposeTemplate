@@ -8,18 +8,17 @@ import android.os.StrictMode.VmPolicy
 import dev.rep.template.di.AndroidApplicationComponent
 import dev.rep.template.di.create
 
-class App: Application() {
+class App: Application(), ApplicationProvider {
 
-    val component: AndroidApplicationComponent by lazy(LazyThreadSafetyMode.NONE) {
+    override val appComponent: AndroidApplicationComponent by lazy(LazyThreadSafetyMode.NONE) {
         AndroidApplicationComponent.create(this)
     }
 
-
     override fun onCreate() {
         super.onCreate()
-        setupStrictMode()
+      //  setupStrictMode()
 
-        component.initializers.initialize()
+        appComponent.initializers.initialize()
     }
 }
 

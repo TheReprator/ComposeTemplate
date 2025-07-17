@@ -11,7 +11,7 @@ import me.tatarka.inject.annotations.Provides
 abstract class AndroidActivityComponent(
   @get:Provides
   val activity: Activity,
-  @Component val applicationComponent: AndroidApplicationComponent,
+  @Component val applicationComponent: CommonAppComponent,
 ): AppRouteFactoryComponent, NewsListDiProvider {
 
   abstract val routeFactories: Set<AppRouteFactory>

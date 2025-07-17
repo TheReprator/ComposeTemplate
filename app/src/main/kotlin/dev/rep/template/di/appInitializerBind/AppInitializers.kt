@@ -4,7 +4,7 @@ import dev.rep.template.util.wrapper.AppInitializer
 import me.tatarka.inject.annotations.Inject
 
 @Inject
-class AppInitializers constructor(
+class AppInitializers (
     private val initializers: Lazy<Set<AppInitializer>>,
 ) : AppInitializer {
     override fun initialize() {

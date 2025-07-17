@@ -22,12 +22,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.navigation.NavController
+import dev.rep.template.R
 import dev.rep.template.features.newsDetail.NewsDetailNavigation
 import dev.rep.template.features.newsList.domain.NewsModel
 import dev.rep.template.features.newsList.presentation.NewsListAction
@@ -107,7 +110,7 @@ fun NewsListScreen(
 fun NewsListLoader(
     modifier: Modifier = Modifier
 ) {
-    CircularProgressIndicator()
+    CircularProgressIndicator(Modifier.testTag(stringResource(R.string.testTag_loader)))
 }
 
 
@@ -116,13 +119,14 @@ fun NewsListRetry(
     onRetry: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
         Button(onClick = {
             onRetry()
         }) {
-            Text(text = "Retry", Modifier.padding(10.dp))
+            Text(text = stringResource(R.string.app_retry), Modifier.padding(10.dp))
         }
-        Text(text = "An Error occurred")
+        Text(text = stringResource(R.string.app_error_generic))
     }
 }
 

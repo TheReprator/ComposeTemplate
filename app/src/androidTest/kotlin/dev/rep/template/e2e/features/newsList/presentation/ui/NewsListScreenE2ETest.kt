@@ -5,12 +5,8 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import dev.rep.template.R
-import dev.rep.template.e2e.TestApp
-import dev.rep.template.e2e.features.newsList.presentation.di.TestApplicationComponent
-import dev.rep.template.features.newsList.domain.usecase.FetchNewsUseCase
 import dev.rep.template.root.MainActivity
 import kotlinx.coroutines.test.runTest
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -20,16 +16,8 @@ class NewsListScreenE2ETest {
 
     @get:Rule
     val composeTestRule = createAndroidComposeRule<MainActivity>()
-    private lateinit var newsUseCase: FetchNewsUseCase
 
     private val context = InstrumentationRegistry.getInstrumentation().targetContext
-
-    @Before
-    fun setUp() {
-        val instrumentation = InstrumentationRegistry.getInstrumentation()
-        val app = instrumentation.targetContext.applicationContext as TestApp // Your Test Application
-        newsUseCase = (app.component as TestApplicationComponent).fetchNewsUseCase
-    }
 
     @Test
     fun newsList_displaysDataFromMockEngine_whenApiCallSuccessful() = runTest {
@@ -57,7 +45,6 @@ class NewsListScreenE2ETest {
 
     @Test
     fun newsList_displaysError_whenApiCallFails() = runTest {
-        newsUseCase.invokeQuery("randome")
         composeTestRule.waitUntil(timeoutMillis = TIMEOUT_MILLIS) {
             composeTestRule.onAllNodesWithText(context.getString(R.string.app_retry), useUnmergedTree = true)
                 .fetchSemanticsNodes().isNotEmpty()

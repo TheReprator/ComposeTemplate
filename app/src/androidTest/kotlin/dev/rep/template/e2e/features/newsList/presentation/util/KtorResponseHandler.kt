@@ -3,12 +3,12 @@ package dev.rep.template.e2e.features.newsList.presentation.util
 import dev.rep.template.e2e.features.newsList.presentation.util.MockClientResponseHandler.Companion.REQUEST_API_KEY
 import dev.rep.template.e2e.features.newsList.presentation.util.MockClientResponseHandler.Companion.REQUEST_PATH
 import dev.rep.template.e2e.features.newsList.presentation.util.MockClientResponseHandler.Companion.REQUEST_PATH_QUERY
+import dev.rep.template.e2e.features.newsList.presentation.util.MockClientResponseHandler.Companion.REQUEST_PATH_QUERY_SEARCH
 import io.ktor.client.engine.mock.*
 import io.ktor.client.request.*
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.headersOf
-import dev.rep.template.e2e.features.newsList.presentation.util.MockClientResponseHandler.Companion.REQUEST_PATH_QUERY_SEARCH
 import kotlinx.coroutines.delay
 
 interface MockClientResponseHandler {

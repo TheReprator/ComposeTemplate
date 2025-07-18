@@ -22,7 +22,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val applicationComponent = from(application)
+        val applicationComponent = from()
         val component = AndroidActivityComponent.create(this, applicationComponent)
 
         enableEdgeToEdge()
@@ -31,8 +31,8 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun from(context: Application): CommonAppComponent {
-        return (context.applicationContext as ApplicationProvider).appComponent
+    private fun ComponentActivity.from(): CommonAppComponent {
+        return (applicationContext as ApplicationProvider).appComponent
     }
 }
 

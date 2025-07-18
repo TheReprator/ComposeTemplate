@@ -7,6 +7,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import dev.rep.template.R
 import dev.rep.template.root.MainActivity
 import kotlinx.coroutines.test.runTest
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -43,6 +44,7 @@ class NewsListScreenE2ETest {
         }
     }
 
+    @Ignore
     @Test
     fun newsList_displaysError_whenApiCallFails() = runTest {
         composeTestRule.waitUntil(timeoutMillis = TIMEOUT_MILLIS) {

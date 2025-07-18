@@ -21,9 +21,9 @@ class FetchNewRemoteImplRepository(
     Mapper<NewsResponseModel, NewsModel>
 ) : FetchNewsDataRepository {
 
-    override suspend fun fetchNews(): AppResult<List<NewsModel>> {
+    override suspend fun fetchNews(query: String): AppResult<List<NewsModel>> {
         val response = httpClient.hitApiWithClient<List<NewsResponseModel>>(
-            "/everything?q=world",
+            "/everything?q=$query",
             HttpMethod.Get
         )
 

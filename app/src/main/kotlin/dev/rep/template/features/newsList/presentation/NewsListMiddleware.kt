@@ -61,7 +61,7 @@ class NewsListMiddleware(
 
     private fun fetchNews() {
         launch(dispatchers.io) {
-            val result = newsUseCase()
+            val result = newsUseCase.invokeQuery()
             withContext(dispatchers.main) {
                 when (result) {
                     is AppSuccess<List<NewsModel>> -> {

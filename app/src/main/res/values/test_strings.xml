@@ -1,3 +1,4 @@
 <resources>
     <string name="testTag_loader">Loader</string>
+    <string name="testTag_newsDetail">Loader</string>
 </resources>

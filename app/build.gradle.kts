@@ -19,7 +19,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "dev.rep.template.e2e.CustomTestRunner"
     }
 
     buildTypes {
@@ -36,9 +36,11 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
     kotlinOptions {
         jvmTarget = "17"
     }
+
     buildFeatures {
         buildConfig = true
         compose = true
@@ -104,12 +106,10 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
 
     testImplementation(libs.junit)
-    testImplementation(libs.ktor.client.mock)
     testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.androidx.room.test)
     testImplementation(libs.test.turbine)
 
-    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.ktor.client.mock)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)

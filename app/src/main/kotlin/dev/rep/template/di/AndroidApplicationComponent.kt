@@ -19,7 +19,7 @@ import me.tatarka.inject.annotations.Provides
 
 @Component
 @ApplicationScope
-abstract class AndroidApplicationComponent(@get:Provides val application: Application): NetworkModule  {
+abstract class AndroidApplicationComponent(@get:Provides open val application: Application): NetworkModule  {
 
   abstract val initializers: AppInitializers
   abstract val dispatchers: AppCoroutineDispatchers

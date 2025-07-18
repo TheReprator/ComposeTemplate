@@ -5,6 +5,7 @@ import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.platform.app.InstrumentationRegistry
 import dev.rep.template.features.newsList.domain.NewsModel
+import dev.rep.template.features.newsList.presentation.NewsListAction
 import dev.rep.template.features.newsList.presentation.NewsListState
 import dev.rep.template.features.newsList.presentation.ui.NewsListScreen
 import org.junit.Rule
@@ -24,8 +25,7 @@ class NewsListScreenTest {
         composeTestRule.setContent {
             NewsListScreen(
                 state = state,
-                newsItemClick = {},
-                onRetry = {}
+                onAction = {}
             )
         }
 
@@ -39,8 +39,7 @@ class NewsListScreenTest {
         composeTestRule.setContent {
             NewsListScreen(
                 state = state,
-                newsItemClick = {},
-                onRetry = {}
+                onAction = {}
             )
         }
 
@@ -57,8 +56,7 @@ class NewsListScreenTest {
         composeTestRule.setContent {
             NewsListScreen(
                 state = state,
-                newsItemClick = {},
-                onRetry = {}
+                onAction = {}
             )
         }
 
@@ -76,8 +74,11 @@ class NewsListScreenTest {
         composeTestRule.setContent {
             NewsListScreen(
                 state = state,
-                newsItemClick = { clicked = it },
-                onRetry = {}
+                onAction = {
+                    if (it is NewsListAction.NewsClicked) {
+                        clicked = it.news
+                    }
+                }
             )
         }
 

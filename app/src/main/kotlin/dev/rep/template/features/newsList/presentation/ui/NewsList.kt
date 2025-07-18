@@ -39,6 +39,8 @@ import dev.rep.template.features.newsList.presentation.NewsListState
 import dev.rep.template.features.newsList.presentation.NewsListViewModel
 import me.tatarka.inject.annotations.Inject
 
+typealias OnAction = (NewsListAction) -> Unit
+
 @Inject
 @Composable
 fun NewsListScreen(
@@ -74,18 +76,13 @@ fun NewsListScreen(
         newsListViewModel.onAction(NewsListAction.FetchNews)
     }
 
-    NewsListScreen(state, {
-        newsListViewModel.onAction(NewsListAction.NewsClicked(it))
-    }, {
-        newsListViewModel.onAction(NewsListAction.RetryFetchNews)
-    }, modifier)
+    NewsListScreen(state, { newsListViewModel.onAction(it) }, modifier)
 }
 
 @Composable
 fun NewsListScreen(
     state: NewsListState,
-    newsItemClick: (NewsModel) -> Unit,
-    onRetry: () -> Unit,
+    onAction: OnAction,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -99,10 +96,12 @@ fun NewsListScreen(
         }
 
         if (state.isError) {
-            return NewsListRetry(onRetry)
+            return NewsListRetry({ onAction(NewsListAction.RetryFetchNews) })
         }
 
-        NewsListDisplay(newsItemClick, state.newsList)
+        NewsListDisplay({
+            onAction(NewsListAction.NewsClicked(it))
+        }, state.newsList)
     }
 }
 

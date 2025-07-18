@@ -8,11 +8,11 @@ import me.tatarka.inject.annotations.Inject
 
 @Inject
 class FetchNewsUseCaseImpl(private val newsRepository: FetchNewsRepository) : FetchNewsUseCase {
-    override suspend operator fun invoke() = newsRepository.fetchNews()
+    override suspend fun invokeQuery(query: String) = newsRepository.fetchNews(query)
     override suspend operator fun invoke(query: String) = newsRepository.searchNews(query)
 }
 
 interface FetchNewsUseCase {
-    suspend operator fun invoke(): AppResult<List<NewsModel>>
+    suspend fun invokeQuery(query: String = "world"): AppResult<List<NewsModel>>
     suspend operator fun invoke(query: String): Flow<AppResult<List<NewsModel>>>
 }

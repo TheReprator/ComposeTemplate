@@ -66,7 +66,7 @@ class NewsListViewModelTest {
     @Test
     fun `fetch news successfully from server on Action FetchNews`() = runTest {
         everySuspend {
-            fetchNewsUseCase()
+              fetchNewsUseCase.invokeQuery()
         } returns AppSuccess<List<NewsModel>>(successNewsList)
 
         newsListViewModel.uiState.test {
@@ -98,7 +98,7 @@ class NewsListViewModelTest {
     fun `fetch news failed from server on Action FetchNews`() = runTest {
 
         everySuspend {
-            fetchNewsUseCase()
+              fetchNewsUseCase.invokeQuery()
         } returns AppError(message = errorMessage)
 
         newsListViewModel.uiState.test {
@@ -128,7 +128,7 @@ class NewsListViewModelTest {
     @Test
     fun `retry to fetch news failed from server on Action RetryFetchNews`() = runTest {
         everySuspend {
-            fetchNewsUseCase()
+              fetchNewsUseCase.invokeQuery()
         } returns AppError(message = errorMessage)
 
         newsListViewModel.uiState.test {
@@ -151,7 +151,7 @@ class NewsListViewModelTest {
             }
 
             everySuspend {
-                fetchNewsUseCase()
+                  fetchNewsUseCase.invokeQuery()
             } returns AppSuccess<List<NewsModel>>(successNewsList)
 
             newsListViewModel.onAction(NewsListAction.RetryFetchNews)
@@ -178,7 +178,7 @@ class NewsListViewModelTest {
         val clickedItem = successNewsList.first<NewsModel>()
 
         everySuspend {
-            fetchNewsUseCase()
+              fetchNewsUseCase.invokeQuery()
         } returns AppSuccess<List<NewsModel>>(successNewsList)
 
         newsListViewModel.onAction(NewsListAction.FetchNews)

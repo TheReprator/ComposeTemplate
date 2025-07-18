@@ -1,23 +1,29 @@
 # === CONFIG ===
-FLUTTER=./gradlew
+GRADLEW=./gradlew
 
 # Run unit test
 taskList:
 	@echo "Task List"
-	$(FLUTTER) task
+	$(GRADLEW) task
+	@echo "✅ Done!"
+
+# Run unit test
+clean:
+	@echo "Clean build"
+	$(GRADLEW) clean
 	@echo "✅ Done!"
 
 # Run unit test
 unitTest:
 	@echo "Unit test..."
-	$(FLUTTER) testDebugUnitTest
+	$(GRADLEW) testDebugUnitTest
 	@echo "✅ Done!"
 
 # Run UI test
 uiTest:
 	@echo "UI test..."
-	$(FLUTTER) connectedAndroidTest
+	$(GRADLEW) connectedAndroidTest
 	@echo "✅ Done!"
 
-# Run UI test
-allTest: unitTest uiTest
+# Run All test
+allTest: clean unitTest uiTest

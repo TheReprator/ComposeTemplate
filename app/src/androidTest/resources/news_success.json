@@ -1,0 +1,71 @@
+{
+  "status": "ok",
+  "totalResults": 123787,
+  "articles": [
+    {
+      "source": {
+        "id": "wired",
+        "name": "Wired"
+      },
+      "author": "1 Boone Ashworth",
+      "title": "These Transcribing Eyeglasses Put Subtitles on the World",
+      "description": "TranscribeGlass can subtitle conversations in nearly real time and will soon be able to translate languages and tell you when the person you’re talking to you is feeling socially awkward.",
+      "url": "https://www.wired.com/story/these-translating-ai-glasses-put-subtitles-on-the-world/",
+      "urlToImage": "https://media.wired.com/photos/6864a32d72b0959e3838d317/191:100/w_1280,c_limit/Transcribe-Glasses-Top-Art.jpg",
+      "publishedAt": "2025-07-02T11:00:00Z",
+      "content": "I knew the AI on these smart glasses worked pretty well once it told me that someone else in the conversation was being the socially awkward one.\r\nTranscribeGlass are smart eyeglasses that aim to do … [+2764 chars]"
+    },
+    {
+      "source": {
+        "id": "wired",
+        "name": "Wired"
+      },
+      "author": "2 Umair Irfan",
+      "title": "The World Is Producing More Food than Ever—but Not for Long",
+      "description": "Even America’s richest farmlands can’t outrun climate collapse. That’s everyone’s problem.",
+      "url": "https://www.wired.com/story/the-world-is-producing-more-food-than-ever-before-but-not-for-long/",
+      "urlToImage": "",
+      "publishedAt": "2025-06-28T11:00:00Z",
+      "content": "This story originally appeared on Vox and is part of the Climate Desk collaboration.\r\nGlobally, humanity is producing more food than ever, but that harvest is concentrated in just a handful of breadb… [+3231 chars]"
+    },
+    {
+      "source": {
+        "id": "the-verge",
+        "name": "The Verge"
+      },
+      "author": "Andrew Webster",
+      "title": "Ghost of Yōtei’s gameplay deep dive shows the open world, combat, and chill beats",
+      "description": "We just got a good, long look at PlayStation’s next major exclusive. As promised, Sony held an event dedicated to Ghost of Yōtei, the PS5-exclusive samurai game from Sucker Punch that launches on October 2nd. The stream was a deep dive exploring everything fr…",
+      "url": "https://www.theverge.com/news/704597/ghost-of-yotei-ps5-gameplay-trailer",
+      "urlToImage": "https://platform.theverge.com/wp-content/uploads/sites/2/2025/07/7908a4aca1e3d54a7853d2a81ea60675cf9b410a-scaled-1.webp?quality=90&strip=all&crop=0,3.4613147178592,100,93.077370564282",
+      "publishedAt": "2025-07-10T21:33:36Z",
+      "content": "The samurai sequel launches on the PS5 in October.\r\nThe samurai sequel launches on the PS5 in October.\r\nWe just got a good, long look at PlayStations next major exclusive. As promised, Sony held an e… [+2461 chars]"
+    },
+    {
+      "source": {
+        "id": null,
+        "name": "Gizmodo.com"
+      },
+      "author": "Germain Lussier",
+      "title": "‘Jurassic World Rebirth’ Didn’t Always End That Way",
+      "description": "Director Gareth Edwards explained that a character who dies in the film didn't always die, and in fact, both fates were filmed.",
+      "url": "https://gizmodo.com/jurassic-world-rebirth-didnt-always-end-that-way-2000622418",
+      "urlToImage": "https://gizmodo.com/app/uploads/2025/07/Jurassic-World-Rebirth-Ali-1200x675.jpg",
+      "publishedAt": "2025-07-02T17:30:04Z",
+      "content": "Jurassic World Rebirthis now in theaters, and if you’ve seen it, you probably felt a little manipulated by the end. Not in a bad way necessarily, but in a way that felt somehow satisfying and also di… [+3873 chars]"
+    },
+    {
+      "source": {
+        "id": null,
+        "name": "BBC News"
+      },
+      "author": null,
+      "title": "Club World Cup pitches not great at all - Bellingham",
+      "description": "Jude Bellingham criticises the quality of pitches at the Club World Cup and says organisers must do better for the 2026 Fifa World Cup.",
+      "url": "https://www.bbc.com/sport/football/videos/cy8ky8xrnnmo",
+      "urlToImage": "https://ichef.bbci.co.uk/ace/standard/1024/cpsprodpb/18d6/live/bded8e50-500b-11f0-a466-d54f65b60deb.jpg",
+      "publishedAt": "2025-06-23T08:44:09Z",
+      "content": "Speaking after Real Madrid's 3-1 win over Pachuca at the Club World Cup, Jude Bellingham criticised the tournament's pitches and asked organisers to do better for the 2026 Fifa World Cup.\r\nREAD MORE:… [+69 chars]"
+    }
+  ]
+}
